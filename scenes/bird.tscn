@@ -1,0 +1,178 @@
+[gd_scene load_steps=14 format=3 uid="uid://c257b53v7qho8"]
+
+[ext_resource type="Script" uid="uid://bfsb44fiwmd2p" path="res://scripts/agents/bird.gd" id="1_hq4t0"]
+[ext_resource type="Texture2D" uid="uid://cvq6phapi0cl6" path="res://assets/bird-black.png" id="1_kqhkv"]
+[ext_resource type="BehaviorTree" uid="uid://td7ede1tpn4t" path="res://ai/trees/bird.tres" id="2_3po83"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hq4t0"]
+radius = 1.13566
+
+[sub_resource type="Animation" id="Animation_hq4t0"]
+length = 0.001
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_bdh3x"]
+resource_name = "fly"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0496075, 0.1, 0.148638, 0.198245, 0.248638),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_kqhkv"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_3po83"]
+resource_name = "move"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.133333, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.099368, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_twsrt"]
+resource_name = "peck"
+length = 0.55
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0497924, 0.0963299, 0.141667, 0.187466, 0.235088, 0.283726, 0.333333, 0.380771, 0.425392, 0.466667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(0, 0), Vector2i(1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_b7mtg"]
+resource_name = "tweet"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0666667, 0.133333, 0.2, 0.266667, 0.333333, 0.4, 0.453647),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 0), Vector2i(0, 2), Vector2i(0, 0), Vector2i(0, 2), Vector2i(0, 0), Vector2i(0, 0), Vector2i(0, 2), Vector2i(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bdh3x"]
+_data = {
+&"RESET": SubResource("Animation_hq4t0"),
+&"fly": SubResource("Animation_bdh3x"),
+&"idle": SubResource("Animation_kqhkv"),
+&"move": SubResource("Animation_3po83"),
+&"peck": SubResource("Animation_twsrt"),
+&"tweet": SubResource("Animation_b7mtg")
+}
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_hq4t0"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3po83"]
+radius = 0.204649
+height = 0.431209
+
+[node name="Bird" type="CharacterBody3D"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+collision_layer = 0
+script = ExtResource("1_hq4t0")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("1_kqhkv")
+hframes = 3
+vframes = 3
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_hq4t0")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_bdh3x")
+}
+
+[node name="BTPlayer" type="BTPlayer" parent="."]
+behavior_tree = ExtResource("2_3po83")
+blackboard_plan = SubResource("BlackboardPlan_hq4t0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_3po83")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
