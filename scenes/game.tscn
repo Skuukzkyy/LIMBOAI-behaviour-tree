@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://b6clwnoi1wvka"]
+
+[ext_resource type="PackedScene" uid="uid://b3w1wbys6hx8h" path="res://agents/jerick/jerick.tscn" id="1_uwrxv"]
+[ext_resource type="PackedScene" uid="uid://cixixklijpfr3" path="res://scenes/player.tscn" id="2_yqjtg"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uwrxv"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_yqjtg"]
+sky_material = SubResource("ProceduralSkyMaterial_uwrxv")
+
+[sub_resource type="Environment" id="Environment_lnu2h"]
+background_mode = 2
+sky = SubResource("Sky_yqjtg")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yqjtg"]
+albedo_color = Color(0, 0, 0, 1)
+
+[node name="Game" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lnu2h")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+use_collision = true
+size = Vector3(100, 1, 100)
+material = SubResource("StandardMaterial3D_yqjtg")
+
+[node name="Player" parent="." instance=ExtResource("2_yqjtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 6)
+
+[node name="NPCs" type="Node3D" parent="."]
+
+[node name="Jerick" parent="NPCs" instance=ExtResource("1_uwrxv")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1, -5)
+
+[node name="Jerick2" parent="NPCs" instance=ExtResource("1_uwrxv")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 8, 1, -5)
+
+[node name="Jerick3" parent="NPCs" instance=ExtResource("1_uwrxv")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 5, 1, -8)
+
+[node name="Jerick4" parent="NPCs" instance=ExtResource("1_uwrxv")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4, 1, -4)
+
+[node name="Jerick5" parent="NPCs" instance=ExtResource("1_uwrxv")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -2, 1, -9)
+
+[node name="Jerick6" parent="NPCs" instance=ExtResource("1_uwrxv")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -5, 1, -5)
+
+[node name="Jerick7" parent="NPCs" instance=ExtResource("1_uwrxv")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -2, 1, -3)

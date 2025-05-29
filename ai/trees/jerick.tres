@@ -1,0 +1,104 @@
+[gd_resource type="BehaviorTree" load_steps=24 format=3 uid="uid://d0eqbqlr1hrlj"]
+
+[ext_resource type="Script" uid="uid://bapalxo1xcv2v" path="res://ai/tasks/change_state.gd" id="2_7k4g3"]
+[ext_resource type="Script" uid="uid://dpxxfbx5xgv2k" path="res://ai/tasks/In Range.gd" id="2_rjo1k"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_d3tnv"]
+
+[sub_resource type="BBVariant" id="BBVariant_rjo1k"]
+type = 1
+saved_value = true
+resource_name = "true"
+
+[sub_resource type="BTCheckAgentProperty" id="BTCheckAgentProperty_7k4g3"]
+property = &"is_interacting"
+value = SubResource("BBVariant_rjo1k")
+
+[sub_resource type="BTCondition" id="BTCondition_uwgj8"]
+script = ExtResource("2_rjo1k")
+distance_min = 0.0
+distance_max = 2.0
+target_var = &"target"
+
+[sub_resource type="BTAction" id="BTAction_sktko"]
+custom_name = "Change To Interact State"
+script = ExtResource("2_7k4g3")
+state_event_name = &"to_interact"
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_7k4g3"]
+min_duration = 2.0
+max_duration = 4.0
+
+[sub_resource type="BBVariant" id="BBVariant_7k4g3"]
+type = 1
+saved_value = false
+resource_name = "<null>"
+
+[sub_resource type="BTSetAgentProperty" id="BTSetAgentProperty_2iqw2"]
+property = &"is_interacting"
+value = SubResource("BBVariant_7k4g3")
+
+[sub_resource type="BTDynamicSequence" id="BTDynamicSequence_rjo1k"]
+custom_name = "Is Interact State"
+children = [SubResource("BTCheckAgentProperty_7k4g3"), SubResource("BTCondition_uwgj8"), SubResource("BTAction_sktko"), SubResource("BTRandomWait_7k4g3"), SubResource("BTSetAgentProperty_2iqw2")]
+
+[sub_resource type="BTCondition" id="BTCondition_2iqw2"]
+script = ExtResource("2_rjo1k")
+distance_min = 0.0
+distance_max = 1.5
+target_var = &"target"
+
+[sub_resource type="BTAction" id="BTAction_efjuq"]
+custom_name = "Change To Attack State"
+script = ExtResource("2_7k4g3")
+state_event_name = &"to_attack"
+
+[sub_resource type="BTSequence" id="BTSequence_f18sc"]
+custom_name = "Is Attack State"
+children = [SubResource("BTCondition_2iqw2"), SubResource("BTAction_efjuq")]
+
+[sub_resource type="BTCondition" id="BTCondition_rjo1k"]
+script = ExtResource("2_rjo1k")
+distance_min = 1.5
+distance_max = 5.0
+target_var = &"target"
+
+[sub_resource type="BTAction" id="BTAction_7k4g3"]
+custom_name = "Change To Chase State"
+script = ExtResource("2_7k4g3")
+state_event_name = &"to_chase"
+
+[sub_resource type="BTSequence" id="BTSequence_2iqw2"]
+custom_name = "Is Chase State"
+children = [SubResource("BTCondition_rjo1k"), SubResource("BTAction_7k4g3")]
+
+[sub_resource type="BTCondition" id="BTCondition_7k4g3"]
+script = ExtResource("2_rjo1k")
+distance_min = 0.0
+distance_max = 9.0
+target_var = &"target"
+
+[sub_resource type="BTAction" id="BTAction_uwgj8"]
+custom_name = "Change To Alert State"
+script = ExtResource("2_7k4g3")
+state_event_name = &"to_alert"
+
+[sub_resource type="BTSequence" id="BTSequence_66qpi"]
+custom_name = "Is ALert State"
+children = [SubResource("BTCondition_7k4g3"), SubResource("BTAction_uwgj8")]
+
+[sub_resource type="BTAction" id="BTAction_2w5sy"]
+custom_name = "Change To Idle State"
+script = ExtResource("2_7k4g3")
+state_event_name = &"to_idle"
+
+[sub_resource type="BTSelector" id="BTSelector_teh4j"]
+custom_name = "Check State"
+children = [SubResource("BTDynamicSequence_rjo1k"), SubResource("BTSequence_f18sc"), SubResource("BTSequence_2iqw2"), SubResource("BTSequence_66qpi"), SubResource("BTAction_2w5sy")]
+
+[sub_resource type="BTDynamicSelector" id="BTDynamicSelector_7k4g3"]
+children = [SubResource("BTSelector_teh4j")]
+
+[resource]
+blackboard_plan = SubResource("BlackboardPlan_d3tnv")
+root_task = SubResource("BTDynamicSelector_7k4g3")
