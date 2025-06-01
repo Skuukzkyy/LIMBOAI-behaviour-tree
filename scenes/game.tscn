@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://b6clwnoi1wvka"]
+[gd_scene load_steps=10 format=3 uid="uid://b6clwnoi1wvka"]
 
 [ext_resource type="PackedScene" uid="uid://b3w1wbys6hx8h" path="res://agents/jerick/jerick.tscn" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://de0x4m0efu7xp" path="res://scripts/npc_manager.gd" id="2_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cixixklijpfr3" path="res://scenes/player.tscn" id="2_yqjtg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uwrxv"]
@@ -16,6 +17,12 @@ sky = SubResource("Sky_yqjtg")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_yqjtg"]
+size = Vector3(18, 1, 14)
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_yqjtg"]
+agent_height = 2.0
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yqjtg"]
 albedo_color = Color(0, 0, 0, 1)
 
@@ -28,34 +35,43 @@ environment = SubResource("Environment_lnu2h")
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
 shadow_enabled = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+[node name="Player" parent="." instance=ExtResource("2_yqjtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2, -17)
+
+[node name="NpcManager" type="Node3D" parent="."]
+script = ExtResource("2_lnu2h")
+
+[node name="Jerick" parent="NpcManager" instance=ExtResource("1_uwrxv")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 0, 1, -22)
+
+[node name="JerickMovementArea" type="Area3D" parent="NpcManager"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NpcManager/JerickMovementArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -24.999)
+shape = SubResource("BoxShape3D_yqjtg")
+
+[node name="CentralArea" type="Marker3D" parent="NpcManager/JerickMovementArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -25)
+
+[node name="Terrains" type="NavigationRegion3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+navigation_mesh = SubResource("NavigationMesh_yqjtg")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Terrains"]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Terrains/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 use_collision = true
 size = Vector3(100, 1, 100)
 material = SubResource("StandardMaterial3D_yqjtg")
 
-[node name="Player" parent="." instance=ExtResource("2_yqjtg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 6)
+[node name="CSGBox3D2" type="CSGBox3D" parent="Terrains/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 14)
+size = Vector3(7, 4, 1)
 
-[node name="NPCs" type="Node3D" parent="."]
-
-[node name="Jerick" parent="NPCs" instance=ExtResource("1_uwrxv")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1, -5)
-
-[node name="Jerick2" parent="NPCs" instance=ExtResource("1_uwrxv")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 8, 1, -5)
-
-[node name="Jerick3" parent="NPCs" instance=ExtResource("1_uwrxv")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 5, 1, -8)
-
-[node name="Jerick4" parent="NPCs" instance=ExtResource("1_uwrxv")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4, 1, -4)
-
-[node name="Jerick5" parent="NPCs" instance=ExtResource("1_uwrxv")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -2, 1, -9)
-
-[node name="Jerick6" parent="NPCs" instance=ExtResource("1_uwrxv")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -5, 1, -5)
-
-[node name="Jerick7" parent="NPCs" instance=ExtResource("1_uwrxv")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -2, 1, -3)
+[connection signal="body_entered" from="NpcManager/JerickMovementArea" to="NpcManager" method="_on_jerick_movement_area_body_entered"]
+[connection signal="body_exited" from="NpcManager/JerickMovementArea" to="NpcManager" method="_on_jerick_movement_area_body_exited"]
