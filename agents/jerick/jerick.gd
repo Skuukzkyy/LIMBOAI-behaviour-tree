@@ -4,8 +4,8 @@ class_name JerickNpc extends CharacterBody3D
 @onready var animation_player: AnimationPlayer = %AnimationPlayer
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent3D
 
+@export var patrol_points: Array[Marker3D]
 @export var speed: float = 5.0
-
 @export var is_on_movement_area: bool = false
 
 

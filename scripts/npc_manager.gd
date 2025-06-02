@@ -1,6 +1,8 @@
 extends Node3D
 
 var last_valid_movement_area_var: StringName = "last_valid_movement_area"
+var patrol_points_var: StringName = "patrol_points"
+var current_patrol_index_var: StringName = "current_patrol_index"
 
 @onready var movement_area_shape: CollisionShape3D = $JerickMovementArea/CollisionShape3D
 
@@ -8,10 +10,10 @@ var last_valid_movement_area_var: StringName = "last_valid_movement_area"
 func _on_jerick_movement_area_body_entered(body: JerickNpc) -> void:
 	if body is JerickNpc and body.has_method("set_is_on_movement_area"):
 		body.set_is_on_movement_area(true)
-		# Also store current position as last valid (safely inside area)
-		body.bt_player.blackboard.set_var(last_valid_movement_area_var, body.global_position)
+		save_patrol_positions(body)
 
-func _on_jerick_movement_area_body_exited(body:JerickNpc) -> void:
+
+func _on_jerick_movement_area_body_exited(body: JerickNpc) -> void:
 	if body is JerickNpc and body.has_method("set_is_on_movement_area"):
 		var safe_position = offset_last_position(body.global_position)
 
@@ -27,3 +29,14 @@ func offset_last_position(npc_position: Vector3) -> Vector3:
 	var safe_position = exit_pos + (direction_to_center * offset_amount)
 	# Store the offset position instead of the exact exit position
 	return safe_position
+
+func save_patrol_positions(body: JerickNpc) -> Array:
+	var patrol_positions = []
+
+	for point in body.patrol_points:
+		patrol_positions.append(point.global_position)
+
+	body.bt_player.blackboard.set_var(patrol_points_var, patrol_positions)
+	body.bt_player.blackboard.set_var(current_patrol_index_var, 0)
+
+	return patrol_positions
