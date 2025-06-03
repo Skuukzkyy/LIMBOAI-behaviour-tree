@@ -30,6 +30,9 @@ func _tick(_delta: float) -> Status:
 	# Get the target position
 	var target_pos = blackboard.get_var(target_position_var)
 	
+	if target_pos is CharacterBody3D:
+		target_pos = target_pos.global_position
+
 	# Make sure target_pos is a Vector3
 	if not target_pos is Vector3:
 		push_error("GoToPosition: Target position is not a Vector3")

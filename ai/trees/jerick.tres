@@ -1,9 +1,140 @@
-[gd_resource type="BehaviorTree" load_steps=19 format=3 uid="uid://d0eqbqlr1hrlj"]
+[gd_resource type="BehaviorTree" load_steps=58 format=3 uid="uid://d0eqbqlr1hrlj"]
 
+[ext_resource type="Script" uid="uid://dpxxfbx5xgv2k" path="res://ai/tasks/in_range.gd" id="2_2iqw2"]
 [ext_resource type="Script" uid="uid://b50v3rbfoshp7" path="res://ai/tasks/go_to_position.gd" id="2_rjo1k"]
+[ext_resource type="Script" uid="uid://buqawc8cmmaim" path="res://ai/tasks/navigate_to_target.gd" id="2_uwgj8"]
 [ext_resource type="Script" uid="uid://di7ya46x1d8v2" path="res://ai/tasks/patrol_points.gd" id="3_pkam7"]
+[ext_resource type="Script" uid="uid://p5kebjokj17" path="res://ai/tasks/look_at.gd" id="3_uwgj8"]
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_d3tnv"]
+
+[sub_resource type="BBVariant" id="BBVariant_efjuq"]
+type = 1
+saved_value = true
+resource_name = "true"
+
+[sub_resource type="BTCheckAgentProperty" id="BTCheckAgentProperty_f18sc"]
+property = &"is_on_movement_area"
+value = SubResource("BBVariant_efjuq")
+
+[sub_resource type="BBVariant" id="BBVariant_66qpi"]
+type = 1
+saved_value = true
+resource_name = "true"
+
+[sub_resource type="BTCheckVar" id="BTCheckVar_teh4j"]
+variable = &"is_enemy_nearby"
+value = SubResource("BBVariant_66qpi")
+
+[sub_resource type="BTCondition" id="BTCondition_uwgj8"]
+script = ExtResource("2_2iqw2")
+distance_min = 0.0
+distance_max = 7.0
+target_var = &"target_player"
+
+[sub_resource type="BBNode" id="BBNode_sktko"]
+saved_value = NodePath("AnimationPlayer")
+resource_name = "AnimationPlayer"
+
+[sub_resource type="BTPlayAnimation" id="BTPlayAnimation_efjuq"]
+animation_player = SubResource("BBNode_sktko")
+animation_name = &"Sprint"
+blend = 1.0
+
+[sub_resource type="BBVariant" id="BBVariant_sktko"]
+type = 4
+saved_value = "Chase"
+resource_name = "Chase"
+
+[sub_resource type="BBNode" id="BBNode_efjuq"]
+saved_value = NodePath("LabelCurrentBehavior")
+resource_name = "LabelCurrentBehavior"
+
+[sub_resource type="BTCallMethod" id="BTCallMethod_f18sc"]
+node = SubResource("BBNode_efjuq")
+method = &"change_text"
+args = Array[BBVariant]([SubResource("BBVariant_sktko")])
+
+[sub_resource type="BTAction" id="BTAction_sktko"]
+script = ExtResource("2_uwgj8")
+movement_speed = 3.5
+tolerance = 1.5
+target_var = &"target_player"
+look_at_target = true
+navigation_agent_path = NodePath("NavigationAgent3D")
+stuck_time_threshold = 0.4
+stuck_distance_threshold = 0.2
+max_stuck_retries = 5
+sidestep_duration = 0.5
+
+[sub_resource type="BTDynamicSequence" id="BTDynamicSequence_2iqw2"]
+custom_name = "Chase"
+children = [SubResource("BTCheckAgentProperty_f18sc"), SubResource("BTCheckVar_teh4j"), SubResource("BTCondition_uwgj8"), SubResource("BTPlayAnimation_efjuq"), SubResource("BTCallMethod_f18sc"), SubResource("BTAction_sktko")]
+
+[sub_resource type="BBVariant" id="BBVariant_7k4g3"]
+type = 1
+saved_value = true
+resource_name = "true"
+
+[sub_resource type="BTCheckAgentProperty" id="BTCheckAgentProperty_2iqw2"]
+property = &"is_on_movement_area"
+value = SubResource("BBVariant_7k4g3")
+
+[sub_resource type="BBVariant" id="BBVariant_2iqw2"]
+type = 1
+saved_value = true
+resource_name = "true"
+
+[sub_resource type="BTCheckVar" id="BTCheckVar_uwgj8"]
+variable = &"is_enemy_nearby"
+value = SubResource("BBVariant_2iqw2")
+
+[sub_resource type="BBVariant" id="BBVariant_uwgj8"]
+type = 9
+saved_value = Vector3(0, 0, 0)
+resource_name = "<null>"
+
+[sub_resource type="BTSetAgentProperty" id="BTSetAgentProperty_sktko"]
+property = &"velocity"
+value = SubResource("BBVariant_uwgj8")
+custom_name = "Stop Moving"
+
+[sub_resource type="BBNode" id="BBNode_uwgj8"]
+saved_value = NodePath("AnimationPlayer")
+resource_name = "AnimationPlayer"
+
+[sub_resource type="BTPlayAnimation" id="BTPlayAnimation_sktko"]
+animation_player = SubResource("BBNode_uwgj8")
+animation_name = &"Pistol_Idle"
+blend = 0.5
+
+[sub_resource type="BBVariant" id="BBVariant_f18sc"]
+type = 4
+saved_value = "Alert"
+resource_name = "Alert"
+
+[sub_resource type="BBNode" id="BBNode_66qpi"]
+saved_value = NodePath("LabelCurrentBehavior")
+resource_name = "LabelCurrentBehavior"
+
+[sub_resource type="BTCallMethod" id="BTCallMethod_teh4j"]
+node = SubResource("BBNode_66qpi")
+method = &"change_text"
+args = Array[BBVariant]([SubResource("BBVariant_f18sc")])
+
+[sub_resource type="BTAction" id="BTAction_f18sc"]
+script = ExtResource("3_uwgj8")
+target_blackboard_key = "target_player"
+rotation_speed = 5.0
+keep_looking = false
+
+[sub_resource type="BTSequence" id="BTSequence_2iqw2"]
+custom_name = "Alert"
+children = [SubResource("BTCheckAgentProperty_2iqw2"), SubResource("BTCheckVar_uwgj8"), SubResource("BTSetAgentProperty_sktko"), SubResource("BTPlayAnimation_sktko"), SubResource("BTCallMethod_teh4j"), SubResource("BTAction_f18sc")]
+
+[sub_resource type="BTSelector" id="BTSelector_efjuq"]
+custom_name = "Enemy Nearby"
+children = [SubResource("BTDynamicSequence_2iqw2"), SubResource("BTSequence_2iqw2")]
 
 [sub_resource type="BBVariant" id="BBVariant_rjo1k"]
 type = 1
@@ -21,6 +152,21 @@ resource_name = "AnimationPlayer"
 [sub_resource type="BTPlayAnimation" id="BTPlayAnimation_uwgj8"]
 animation_player = SubResource("BBNode_2iqw2")
 animation_name = &"Swim_Fwd"
+blend = 0.5
+
+[sub_resource type="BBVariant" id="BBVariant_teh4j"]
+type = 4
+saved_value = "Out of Range"
+resource_name = "Out of Range"
+
+[sub_resource type="BBNode" id="BBNode_2w5sy"]
+saved_value = NodePath("LabelCurrentBehavior")
+resource_name = "LabelCurrentBehavior"
+
+[sub_resource type="BTCallMethod" id="BTCallMethod_8aun2"]
+node = SubResource("BBNode_2w5sy")
+method = &"change_text"
+args = Array[BBVariant]([SubResource("BBVariant_teh4j")])
 
 [sub_resource type="BTAction" id="BTAction_efjuq"]
 script = ExtResource("2_rjo1k")
@@ -31,8 +177,11 @@ look_at_target = true
 
 [sub_resource type="BTSequence" id="BTSequence_f18sc"]
 custom_name = "Outside The Movement Area"
-children = [SubResource("BTCheckAgentProperty_7k4g3"), SubResource("BTPlayAnimation_uwgj8"), SubResource("BTAction_efjuq")]
-_enabled = false
+children = [SubResource("BTCheckAgentProperty_7k4g3"), SubResource("BTPlayAnimation_uwgj8"), SubResource("BTCallMethod_8aun2"), SubResource("BTAction_efjuq")]
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_uwgj8"]
+min_duration = 0.3
+max_duration = 1.0
 
 [sub_resource type="BBNode" id="BBNode_patrol"]
 saved_value = NodePath("AnimationPlayer")
@@ -41,6 +190,21 @@ resource_name = "AnimationPlayer"
 [sub_resource type="BTPlayAnimation" id="BTPlayAnimation_patrol"]
 animation_player = SubResource("BBNode_patrol")
 animation_name = &"Walk"
+blend = 0.5
+
+[sub_resource type="BBVariant" id="BBVariant_2w5sy"]
+type = 4
+saved_value = "Patrol"
+resource_name = "Patrol"
+
+[sub_resource type="BBNode" id="BBNode_8aun2"]
+saved_value = NodePath("LabelCurrentBehavior")
+resource_name = "LabelCurrentBehavior"
+
+[sub_resource type="BTCallMethod" id="BTCallMethod_cx7vb"]
+node = SubResource("BBNode_8aun2")
+method = &"change_text"
+args = Array[BBVariant]([SubResource("BBVariant_2w5sy")])
 
 [sub_resource type="BTAction" id="BTAction_patrol"]
 script = ExtResource("3_pkam7")
@@ -48,14 +212,16 @@ movement_speed = 5.0
 tolerance = 1.0
 patrol_points_var = &"patrol_points"
 current_index_var = &"current_patrol_index"
+is_enemy_nearby_var = &"is_enemy_nearby"
 look_at_target = true
 
 [sub_resource type="BTSequence" id="BTSequence_patrol"]
 custom_name = "Patrol Points"
-children = [SubResource("BTPlayAnimation_patrol"), SubResource("BTAction_patrol")]
+children = [SubResource("BTRandomWait_uwgj8"), SubResource("BTPlayAnimation_patrol"), SubResource("BTCallMethod_cx7vb"), SubResource("BTAction_patrol")]
 
 [sub_resource type="BTCooldown" id="BTCooldown_rjo1k"]
 duration = 2.0
+start_cooled = true
 children = [SubResource("BTSequence_patrol")]
 
 [sub_resource type="BBNode" id="BBNode_7k4g3"]
@@ -65,13 +231,28 @@ resource_name = "AnimationPlayer"
 [sub_resource type="BTPlayAnimation" id="BTPlayAnimation_2iqw2"]
 animation_player = SubResource("BBNode_7k4g3")
 animation_name = &"Idle"
+blend = 0.5
+
+[sub_resource type="BBVariant" id="BBVariant_6lqxj"]
+type = 4
+saved_value = "Idle"
+resource_name = "Idle"
+
+[sub_resource type="BBNode" id="BBNode_0bkj2"]
+saved_value = NodePath("LabelCurrentBehavior")
+resource_name = "LabelCurrentBehavior"
+
+[sub_resource type="BTCallMethod" id="BTCallMethod_phdm5"]
+node = SubResource("BBNode_0bkj2")
+method = &"change_text"
+args = Array[BBVariant]([SubResource("BBVariant_6lqxj")])
 
 [sub_resource type="BTSequence" id="BTSequence_uwgj8"]
 custom_name = "Idle"
-children = [SubResource("BTPlayAnimation_2iqw2")]
+children = [SubResource("BTPlayAnimation_2iqw2"), SubResource("BTCallMethod_phdm5")]
 
 [sub_resource type="BTSelector" id="BTSelector_7k4g3"]
-children = [SubResource("BTSequence_f18sc"), SubResource("BTCooldown_rjo1k"), SubResource("BTSequence_uwgj8")]
+children = [SubResource("BTSelector_efjuq"), SubResource("BTSequence_f18sc"), SubResource("BTCooldown_rjo1k"), SubResource("BTSequence_uwgj8")]
 
 [resource]
 blackboard_plan = SubResource("BlackboardPlan_d3tnv")

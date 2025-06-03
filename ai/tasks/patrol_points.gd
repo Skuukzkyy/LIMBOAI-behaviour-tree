@@ -9,6 +9,8 @@ extends BTAction
 @export var patrol_points_var: StringName = &"patrol_points"
 ## Name of the current patrol index variable in the blackboard
 @export var current_index_var: StringName = &"current_patrol_index"
+## Name of the enemy nearby variable in the blackboard
+@export var is_enemy_nearby_var: StringName = &"is_enemy_nearby"
 ## If true, the agent will face the direction it's moving
 @export var look_at_target: bool = true
 
@@ -30,7 +32,15 @@ func _setup() -> void:
 		push_warning("BTPatrolPoints: Current index variable not found in blackboard. Initializing to 0.")
 		blackboard.set_var(current_index_var, 0)
 
+
 func _tick(_delta: float) -> Status:
+	# Check if enemy is nearby - if so, interrupt patrol immediately
+	if blackboard.get_var(is_enemy_nearby_var, false, false):
+		# Force agent to stop moving when interrupted
+		agent.velocity = Vector3.ZERO
+		# Immediately abort the task
+		return FAILURE
+
 	if not _navigation_agent:
 		return FAILURE
 
@@ -65,11 +75,26 @@ func _tick(_delta: float) -> Status:
 	# Optional: Make the agent face the direction it's moving
 	if look_at_target:
 		var look_target = Vector3(next_path_position.x, agent.global_position.y, next_path_position.z)
-		agent.look_at(look_target, Vector3.UP)
-		agent.rotate_y(PI)
+		if !agent.global_position.is_equal_approx(look_target):
+			agent.look_at(look_target, Vector3.UP)
+			agent.rotate_y(PI)
 
 	return RUNNING
 
 
+func _enter() -> void:
+	# Reset the navigation agent's state when entering patrol task
+	if _navigation_agent:
+		_navigation_agent.target_position = agent.global_position
+		_navigation_agent.velocity = Vector3.ZERO
+		# Force recalculation of path
+		_navigation_agent.get_final_position()
+
+
+# Called when exiting this task to clean up
 func _exit() -> void:
 	agent.velocity = Vector3.ZERO
+
+	# Clear navigation path when exiting
+	if _navigation_agent:
+		_navigation_agent.target_position = agent.global_position
